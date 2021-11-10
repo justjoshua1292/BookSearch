@@ -33,17 +33,17 @@ const SignupForm = () => {
     }
 
     try {
-      const response = await createUser(userFormData);
-      console.log('signed in -->', token);
-      Auth.login(token);
+      const {data} = await createUser(userFormData);
+      // console.log('signed in -->', token);
+      Auth.login(data.createUser.token);
     }catch (err) {
       console.error (err);
       setShowAlert(true);
     }
 
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
+      // if (!response) {
+      //   throw new Error('something went wrong!');
+      // }
 
     setUserFormData({
       username: '',

@@ -12,11 +12,11 @@ import {
 import {setContext} from '@apollo/client/link/context';
 import Auth from './utils/auth';
 
-const HttpLink = createHttpLink ({
+const httpLink = createHttpLink ({
   uri: '/graphql',
-}),
+});
 
-const authLink = setContext((_, {Headers}) => {
+const authLink = setContext((_, {headers}) => {
   const token= Auth.getToken();
 
   return {
@@ -24,12 +24,12 @@ const authLink = setContext((_, {Headers}) => {
       ...headers,
       authorizations: token? `Bearer ${token}` : "",
 
-    }
-  }
-}),
+    },
+  };
+});
 
 const client = new ApolloClient ({
-  // 'http://localhost3001/graphql',
+  // 'http://localhost3000/graphql';
   link: authLink.concat(httpLink),
   cache: new InMemoryCache()
 });

@@ -1,15 +1,43 @@
+import {useQuery, useMutation} from '@apollo/client'
 import React, { useState, useEffect } from 'react';
 import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap';
 
-import { getMe, deleteBook } from '../utils/API';
+import { GET_ME } from '..utils/queries';
+import { REMOVE_BOOK } from '..utils/,mutations';
+// import {deleteBook } from '../utils/API';
 import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 
 const SavedBooks = () => {
   const [userData, setUserData] = useState({});
+  const [deleteBookMutation, _] = useMutation(REMOVE_BOOK);
 
   // use this to determine if `useEffect()` hook needs to run again
   const userDataLength = Object.keys(userData).length;
+
+
+const {error, loading} = useQuery(GET_ME, {
+  onCompleted: ({ me }) => {
+    setUserData(me);
+}
+});
+console.log('userData -->', userData);
+
+const handleDeleteBook = async (bookId) => {
+
+try{
+  
+const { data } = await deleteBookMutation({
+  variables: {
+    bookId
+  },
+  onCompleted: ({ removeBook }) => {
+    console.log('removeBook-->', removeBook);
+    setUserData(removebook);
+    removeBookId(bookId);
+  }
+});
+
 
   useEffect(() => {
     const getUserData = async () => {
@@ -36,30 +64,7 @@ const SavedBooks = () => {
     getUserData();
   }, [userDataLength]);
 
-  // create function that accepts the book's mongo _id value as param and deletes the book from the database
-  const handleDeleteBook = async (bookId) => {
-    const token = Auth.loggedIn() ? Auth.getToken() : null;
-
-    if (!token) {
-      return false;
-    }
-
-    try {
-      const response = await deleteBook(bookId, token);
-
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
-
-      const updatedUser = await response.json();
-      setUserData(updatedUser);
-      // upon success, remove book's id from localStorage
-      removeBookId(bookId);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
+  
   // if data isn't here yet, say so
   if (!userDataLength) {
     return <h2>LOADING...</h2>;
@@ -98,6 +103,5 @@ const SavedBooks = () => {
       </Container>
     </>
   );
-};
 
 export default SavedBooks;

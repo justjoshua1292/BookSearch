@@ -1,4 +1,4 @@
-import {gql, useMutation} from '@apollo/client'
+import { gql, useMutation } from '@apollo/client'
 
 const ADD_USER = gql`
 mutation Createuser($username: String!, $email:String!, $password: String!){
@@ -11,37 +11,37 @@ mutation Createuser($username: String!, $email:String!, $password: String!){
 }
 `
 
-export function useCreateUser(){
-    const [Createuser,  {data, error, loading}] = useMutation(ADD_USER);
+export function useCreateUser() {
+    const [Createuser, { data, error, loading }] = useMutation(ADD_USER);
 
-    async function handleCreateUser(payload){
-        const {username, email, password} = payload;
+    async function handleCreateUser(payload) {
+        const { username, email, password } = payload;
 
-let addUser;
-try {
-    const {data: { addUser } } = await createUser(
-        {
-            variables: {
-                username,
-                email,
-                password
-            }
-        });
+        let addUser;
+        try {
+            const { data: { addUser } } = await Createuser(
+                {
+                    variables: {
+                        username,
+                        email,
+                        password
+                    }
+                });
+            return addUser
+        } catch (error) {
+            console.log(error.graphQLErrors)
+        }
+
         return addUser
-    } catch (error) {
-        console.log(error.graphQLErrors)
     }
 
-    return addUser
+    return {
+        createUser: handleCreateUser,
+        data: data,
+        loading: loading,
+        error
+    }
 }
-
-return {
-    createUser:handleCreateUser,
-    data:data,
-    loading: loading,
-    error
-}
-
 
 export const SAVE_BOOK = gql`
 mutation SaveBook($bookId: String!, $Title: String!, $Authors: [String]!, $description: String, $image: String, $link: String){
@@ -85,6 +85,3 @@ mutation LoginUser($email: String!, $password: String!) {
     }
 }
 `
-
-
-}

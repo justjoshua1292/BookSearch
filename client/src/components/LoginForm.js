@@ -31,7 +31,7 @@ const LoginForm = () => {
 
     try {
       const {email, password} = userFormData;
-      const response = await loginUser(userFormData);
+      // const response = await loginUser(userFormData);
       const {data: {login} } = await loginUserMutation({
         variables: {
           email,
@@ -39,13 +39,13 @@ const LoginForm = () => {
         }
       });
 
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
+      // if (!response.ok) {
+      //   throw new Error('something went wrong!');
+      
 
-      const { token, user } = await response.json();
-      console.log(user);
-      Auth.login(token);
+      // const { token, user } = await response.json();
+      // console.log(user);
+      // Auth.login(token);
     } catch (err) {
       console.error(err);
       setShowAlert(true);

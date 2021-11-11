@@ -13,4 +13,4 @@ query GetMe {
         link
     }
 }
-`
+`;

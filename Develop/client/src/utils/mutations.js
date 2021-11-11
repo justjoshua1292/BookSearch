@@ -2,7 +2,7 @@ import { gql, useMutation } from '@apollo/client'
 
 const ADD_USER = gql`
 mutation Createuser($username: String!, $email:String!, $password: String!){
-    addUser($username: $username, email:$email, password: $password!) {
+    addUser(username: $username, email:$email, password: $password) {
         token
         user{
             username
@@ -12,14 +12,14 @@ mutation Createuser($username: String!, $email:String!, $password: String!){
 `
 
 export function useCreateUser() {
-    const [Createuser, { data, error, loading }] = useMutation(ADD_USER);
+    const [createUser, { data, error, loading }] = useMutation(ADD_USER);
 
     async function handleCreateUser(payload) {
         const { username, email, password } = payload;
 
         let addUser;
         try {
-            const { data: { addUser } } = await Createuser(
+            const { data: { addUser } } = await createUser(
                 {
                     variables: {
                         username,
@@ -55,9 +55,7 @@ mutation SaveBook($bookId: String!, $Title: String!, $Authors: [String]!, $descr
     image
     link
 }
-}
-}
-`
+`;
 
 export const REMOVE_BOOK = gql`
 mutation RemoveBook($bookId: String!) {
@@ -71,8 +69,7 @@ mutation RemoveBook($bookId: String!) {
         link
         }
     }
-}
-`
+`;
 
 
 export const LOGIN_USER = gql`
@@ -84,4 +81,4 @@ mutation LoginUser($email: String!, $password: String!) {
         }
     }
 }
-`
+`;

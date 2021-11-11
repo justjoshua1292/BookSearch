@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const db = require('./config/connection');
 const routes = require('./routes');
-const {ApolloServer}= require("apollo-server");
+const {ApolloServer}= require("apollo-server-express");
 const {authMiddleware}= require("./utils/auth")
 const {typeDefs, resolvers}= require("./models")
 
@@ -18,21 +18,26 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // app.use(routes);
-const server = new ApolloServer(
-  {
-    typeDefs, resolvers,
-    context:({req})=>{
-      authMiddleware(req)
+async function startApolloServer(){
+  const server = new ApolloServer(
+    {
+      typeDefs, resolvers,
+      context:({req})=>{
+        authMiddleware(req)
+      }
     }
-  }
-)
+  )
+  await server.start()
+  server.applyMiddleware({app})
+    app.listen(PORT, () =>{
+      console.log("server listening")
+    });
+}
+
+
 
 
 db.once('open', () => {
-server.listen ().then(({
-  url
-})=>{
-  console.log("server listening")
-})
+startApolloServer()
 //   app.listen(PORT, () => console.log(`🌍 Now listening on localhost:${PORT}`));
 });

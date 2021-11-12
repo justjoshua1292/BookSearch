@@ -21,7 +21,9 @@ module.exports = {
         },
 
         login: async (_parent, args, context, _info) => {
-            const user = await User.findOne({ $or: [{ username: args.username }, { email: args.email }] });
+            console.log("args", args);
+      
+            const user = await User.findOne({ $or: [{ password: args.password }, { email: args.email }] });
             if (!user) {
                 throw new UserInputError('Cant find user');
             }
@@ -72,7 +74,7 @@ module.exports = {
     Query: {
         me: async (_parent, args, context, _info) => {
             const { user } = context;
-            const foundUser = await User.findone({
+            const foundUser = await User.findOne({
                 $or: [{ _id: user._id }, { username: user.username }],
             });
 

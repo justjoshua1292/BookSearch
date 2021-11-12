@@ -21,51 +21,30 @@ const SavedBooks = () => {
       setUserData(me);
     }
   });
-  console.log('userData -->', userData);
+  console.log('userData -->', );
 
   const handleDeleteBook = async (bookId) => {
 
     try {
     //   const { data } = await deleteBookMutation(bookId, token){{
-      const { data } = await deleteBookMutation({
+      const { data:{removeBook} } = await deleteBookMutation({
         variables: {
           bookId
         },
-        onCompleted: ({ removeBook }) => {
-          console.log('removeBook-->', removeBook);
-          setUserData(removeBook);
-          removeBookId(bookId);
-        }
+        // onCompleted: ({ removeBook }) => {
+        //   debugger
+        //   console.log('removeBook-->', removeBook);
+        //   setUserData(removeBook);
+        //   removeBookId(bookId);
+        // }
       });
+        setUserData(removeBook);
+      removeBookId(bookId);
     }catch (err) {
       console.log(err);
     }
   }
-      useEffect(() => {
-        const getUserData = async () => {
-          try {
-            const token = Auth.loggedIn() ? Auth.getToken() : null;
-
-            if (!token) {
-              return false;
-            }
-
-            const response = await GET_ME(token);
-
-            // if (!response.ok) {
-            //   throw new Error('something went wrong!');
-            // }
-            // const updatedUser = await response.json();
-
-            const user = await response.json();
-            setUserData(user);
-          } catch (err) {
-            console.error(err);
-          }
-        };
-
-        getUserData();
-      }, [userDataLength]);
+     
 
 
       // if data isn't here yet, say so
